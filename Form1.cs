@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,18 +26,11 @@ namespace WindowsFormsApp1
             AtualizarGrid();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnInserir_Click(object sender, EventArgs e)
         {
+            if (!ValidaCliente())
+                return;
+
             DialogResult result = MessageBox.Show("Deseja incluir novo registro?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result != DialogResult.Yes)
@@ -75,6 +69,9 @@ namespace WindowsFormsApp1
 
                 MessageBox.Show("Registro excluído com sucesso.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+            MessageBox.Show("Nenhum cliente selecionado.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         }
 
         private void AtualizarGrid()
@@ -89,6 +86,9 @@ namespace WindowsFormsApp1
         {
             if (dataGridViewClientes.SelectedRows.Count > 0)
             {
+                if (!ValidaCliente())
+                    return;
+
                 DialogResult result = MessageBox.Show("Deseja salvar as alterações?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result != DialogResult.Yes)
@@ -110,6 +110,8 @@ namespace WindowsFormsApp1
 
                 MessageBox.Show("Alterações salvas com sucesso.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+            MessageBox.Show("Nenhum cliente selecionado.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dataGridViewClientes_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -142,6 +144,51 @@ namespace WindowsFormsApp1
         private void btnLimpar_Click(object sender, EventArgs e)
         {
             LimparCampos();
+        }
+
+
+        private bool ValidaCliente()
+        {
+            if (ValidaNome() && ValidaTelefone() && ValidaEmail())
+                return true;
+
+            return false;
+        }
+
+        private bool ValidaNome()
+        {
+            if (textNome.Text.Trim() == "")
+            {
+                MessageBox.Show("Nome não pode ser vazio.", "Erro de Validação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidaEmail()
+        {
+            string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";  // Regex simples para email
+            if (!Regex.IsMatch(textEmail.Text, pattern) && textEmail.Text.Trim() != "")
+            {
+                MessageBox.Show("Por favor, insira um email válido.", "Erro de Validação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidaTelefone()
+        {
+            //string pattern = @"^\(?\d{2}\)?[\s-]?\d{4,5}[\s-]?\d{4}$";  // Regex simples para telefone
+            string pattern = @"^\+?[1-9]\d{0,2}[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,9}$";// Internacional
+            if (!Regex.IsMatch(textTelefone.Text, pattern) && textTelefone.Text.Trim() != "")
+            {
+                MessageBox.Show("Por favor, insira um telefone válido.", "Erro de Validação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
         }
     }
 }

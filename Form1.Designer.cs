@@ -96,7 +96,6 @@
             this.textEmail.Name = "textEmail";
             this.textEmail.Size = new System.Drawing.Size(511, 26);
             this.textEmail.TabIndex = 6;
-            this.textEmail.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label4
             // 
@@ -113,7 +112,6 @@
             this.textTelefone.Name = "textTelefone";
             this.textTelefone.Size = new System.Drawing.Size(511, 26);
             this.textTelefone.TabIndex = 4;
-            this.textTelefone.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // dataGridViewClientes
             // 
